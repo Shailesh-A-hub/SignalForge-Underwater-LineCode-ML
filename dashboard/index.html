@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignalForge — Underwater Acoustic Line-Code Simulator & ML Decision Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header class="app-header">
+    <div class="brand-wrapper">
+      <div class="brand-icon">SF</div>
+      <div>
+        <h1 class="brand-title">SignalForge</h1>
+        <div class="brand-subtitle">Underwater Acoustic Channel Simulator & ML Decision Suite</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-header" id="btnThemeToggle" title="Toggle MATLAB Classic / Cyber Dark Theme">
+        <span class="icon">◐</span> <span id="themeLabel">MATLAB Theme</span>
+      </button>
+      <button class="btn-header btn-primary-action" id="btnOpenMatlabCode">
+        <span class="icon">⤓</span> Export MATLAB Script
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Left Column: Controls & Environmental Parameters -->
+    <aside class="sidebar-controls">
+
+      <!-- Channel Conditions Card -->
+      <div class="glass-card">
+        <div class="card-title">
+          <span class="icon">🌊</span> Acoustic Channel Parameters
+        </div>
+
+        <!-- SNR Slider -->
+        <div class="control-group">
+          <div class="control-label-row">
+            <span class="control-label">Signal-to-Noise Ratio (SNR)</span>
+            <span class="control-val" id="valSnr">15.0 dB</span>
+          </div>
+          <input type="range" class="slider-range" id="sliderSnr" min="-5" max="30" step="0.5" value="15">
+        </div>
+
+        <!-- Multipath Severity Slider -->
+        <div class="control-group">
+          <div class="control-label-row">
+            <span class="control-label">Multipath Coefficient (k)</span>
+            <span class="control-val" id="valMultipath">0.25</span>
+          </div>
+          <input type="range" class="slider-range" id="sliderMultipath" min="0.0" max="1.0" step="0.02" value="0.25">
+        </div>
+
+        <!-- Doppler Velocity Slider -->
+        <div class="control-group">
+          <div class="control-label-row">
+            <span class="control-label">Doppler Velocity (v)</span>
+            <span class="control-val" id="valDoppler">0.50 m/s</span>
+          </div>
+          <input type="range" class="slider-range" id="sliderDoppler" min="0.0" max="4.0" step="0.1" value="0.5">
+        </div>
+
+        <!-- Distance Slider -->
+        <div class="control-group">
+          <div class="control-label-row">
+            <span class="control-label">Propagation Distance (d)</span>
+            <span class="control-val" id="valDistance">350 m</span>
+          </div>
+          <input type="range" class="slider-range" id="sliderDistance" min="50" max="1000" step="10" value="350">
+        </div>
+      </div>
+
+      <!-- Application Priority Card -->
+      <div class="glass-card">
+        <div class="card-title">
+          <span class="icon">🎯</span> Transmission Priority
+        </div>
+        <div class="priority-chips">
+          <button class="chip-btn active" data-priority="balanced">Balanced</button>
+          <button class="chip-btn" data-priority="low_ber">Low BER</button>
+          <button class="chip-btn" data-priority="low_bandwidth">Low Bandwidth</button>
+          <button class="chip-btn" data-priority="sync">Clock Sync</button>
+          <button class="chip-btn" data-priority="dc_free">DC-Free</button>
+        </div>
+      </div>
+
+      <!-- Input Bits Card -->
+      <div class="glass-card">
+        <div class="card-title">
+          <span class="icon">⌨</span> Binary Test Stream
+        </div>
+        <div class="bit-input-row">
+          <input type="text" class="bit-input" id="inputBits" value="101100101011" maxlength="24">
+          <button class="btn-small" id="btnGenRandomBits">Random</button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Right Column: Results, ML Outputs, and Waveforms -->
+    <section class="content-display">
+
+      <!-- Hero Output Banner: Final Model Output -->
+      <div class="glass-card hero-result-card">
+        <div class="hero-header">
+          <div>
+            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-secondary); margin-bottom: 4px;">
+              Optimal Recommended Line Code
+            </div>
+            <div class="pred-badge-group">
+              <span class="pred-code-name" id="predCodeName">AMI</span>
+              <span class="objective-tag" id="predObjectiveTag">SAW Multi-Criteria</span>
+            </div>
+          </div>
+
+          <!-- Objective Selection Toggle -->
+          <div class="objective-toggle-wrapper">
+            <button class="obj-btn active" id="btnObjSaw" title="Multi-attribute utility balancing BER, Bandwidth, DC & Sync">SAW Selected</button>
+            <button class="obj-btn" id="btnObjOracle" title="Strict empirical minimum bit-error rate predictor">Min-BER Oracle</button>
+          </div>
+        </div>
+
+        <!-- 4-Box Key Performance Metrics Grid -->
+        <div class="metrics-row">
+          <div class="metric-box">
+            <div class="m-lbl">Measured BER</div>
+            <div class="m-val" id="metricBer" style="color: var(--accent-green);">0.0000</div>
+            <div class="m-sub">Simulated bit transmission</div>
+          </div>
+          <div class="metric-box">
+            <div class="m-lbl">Occupied Bandwidth</div>
+            <div class="m-val" id="metricBw">24.0 kHz</div>
+            <div class="m-sub">99% Power spectral containment</div>
+          </div>
+          <div class="metric-box">
+            <div class="m-lbl">DC Balance Metric</div>
+            <div class="m-val" id="metricDc">1.000</div>
+            <div class="m-sub" id="metricDcDesc">Strictly zero DC mean</div>
+          </div>
+          <div class="metric-box">
+            <div class="m-lbl">Inference Latency</div>
+            <div class="m-val" id="metricLatency" style="color: var(--accent-cyan);">0.18 ms</div>
+            <div class="m-sub">Measured live in browser</div>
+          </div>
+        </div>
+
+        <!-- 6-Element Posterior Probability Vector -->
+        <div class="prob-dist-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
+              6-Class Posterior Distribution (k-NN Nearest-Neighbor Vote Vector)
+            </span>
+            <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);" id="vectorRawPreview">
+              P = [0.00, 0.00, 0.00, 0.20, 0.80, 0.00]
+            </span>
+          </div>
+
+          <div class="prob-bars-grid" id="probBarsContainer">
+            <!-- Dynamically populated by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Waveform Visualization Canvas -->
+      <div class="glass-card">
+        <div class="canvas-toolbar">
+          <div class="card-title" style="margin-bottom: 0;">
+            <span class="icon">📈</span> Live Waveform Transmission & Decoding
+          </div>
+          <div class="canvas-legend">
+            <div class="legend-item"><span class="legend-dot" style="background: var(--accent-cyan);"></span> TX Encoded</div>
+            <div class="legend-item"><span class="legend-dot" style="background: var(--accent-amber);"></span> RX Channel Corrupted</div>
+            <div class="legend-item"><span class="legend-dot" style="background: var(--accent-green);"></span> RX Decoded</div>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="waveformCanvas" width="1000" height="280"></canvas>
+        </div>
+
+        <!-- Waveform Selector Tabs -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-right: 6px; align-self: center;">Inspect Scheme:</span>
+          <button class="chip-btn" data-scheme="nrzl">NRZ-L</button>
+          <button class="chip-btn" data-scheme="nrzi">NRZ-I</button>
+          <button class="chip-btn" data-scheme="rz">RZ</button>
+          <button class="chip-btn" data-scheme="manchester">Manchester</button>
+          <button class="chip-btn active" data-scheme="ami">AMI</button>
+          <button class="chip-btn" data-scheme="diff_manchester">Diff. Manchester</button>
+        </div>
+      </div>
+
+      <!-- MATLAB Code & Graph Generator Panel -->
+      <div class="glass-card" id="matlabExportSection">
+        <div class="code-header-row">
+          <div class="card-title" style="margin-bottom: 0;">
+            <span class="icon">💻</span> Reproduce in MATLAB (Self-Contained Script)
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-small" id="btnDownloadMFile">⤓ Download .m</button>
+            <button class="btn-small btn-primary-action" id="btnCopyMatlabCode">Copy Code</button>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
+          This code matches your exact slider inputs. Copy and run it in MATLAB or MATLAB Online to produce the exact publication figures.
+        </p>
+        <div class="code-box-container" id="matlabCodeOutput">
+          % Generating script...
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast-notice" id="toastNotice">
+    Code copied to clipboard!
+  </div>
+
+  <!-- Scripts -->
+  <script src="ml_model_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
