@@ -11,8 +11,9 @@
 \usepackage{tabularx}
 \usepackage{url}
 \usepackage{microtype}
+\usepackage{float}
 
-% Relax float parameters so every figure stays directly with its explanatory text
+% Relax float parameters
 \renewcommand{\topfraction}{0.95}
 \renewcommand{\bottomfraction}{0.95}
 \renewcommand{\textfraction}{0.05}
@@ -27,28 +28,27 @@
 
 \title{A Real-Time Adaptive Digital Communication System for Intelligent Line-Code Selection Under Simulated Underwater Acoustic Channel Conditions}
 
-% 3-column author block matching reference format
+% Single column stacked author block matching exact required format
 \author{
-    \IEEEauthorblockN{Ekanshi Yadav}
-    \IEEEauthorblockA{\textit{Dept. of Electronics and} \\
-    \textit{Communication Engineering} \\
+    \IEEEauthorblockN{EKANSHI YADAV}
+    \IEEEauthorblockA{\textit{Dept. of Electronics and communication Engineering} \\
     \textit{Vellore Institute of Technology} \\
-    \textit{Vellore, India} \\
-    ekanshi.yadav2024@vitstudent.ac.in}
-    \and
-    \IEEEauthorblockN{A Shailesh}
-    \IEEEauthorblockA{\textit{Dept. of Electronics and} \\
-    \textit{Communication Engineering} \\
+    Vellore, India \\
+    \underline{\textcolor{blue}{\url{ekanshi.yadav2024@vitstudent.ac.in}}}}
+    \vspace{0.25cm}
+    
+    \IEEEauthorblockN{A SHAILESH}
+    \IEEEauthorblockA{\textit{Dept. of Electronics and communication Engineering} \\
     \textit{Vellore Institute of Technology} \\
-    \textit{Vellore, India} \\
-    shailesh.2024@vitstudent.ac.in}
-    \and
-    \IEEEauthorblockN{Sheshadri Muthusamy}
-    \IEEEauthorblockA{\textit{Dept. of Electronics and} \\
-    \textit{Communication Engineering} \\
+    Vellore, India \\
+    \underline{\textcolor{blue}{\url{shailesh.2024@vitstudent.ac.in}}}}
+    \vspace{0.25cm}
+    
+    \IEEEauthorblockN{SHESHADRI MUTHUSAMY}
+    \IEEEauthorblockA{\textit{Dept. of Electronics and communication Engineering} \\
     \textit{Vellore Institute of Technology} \\
-    \textit{Vellore, India} \\
-    sheshadri.m2024@vitstudent.ac.in}
+    Vellore, India \\
+    \underline{\textcolor{blue}{\url{sheshadri.m2024@vitstudent.ac.in}}}}
 }
 
 \maketitle
@@ -125,7 +125,7 @@ Occupied bandwidth is reported as the $90\%$ power bandwidth, the smallest $B_{9
 \end{equation}
 where $S(f)$ is the power spectral density. The DC balance score $M_{\text{DC}} \in [0, 1]$ measures baseline stability ($1 - |\mu_v| / V_{\text{peak}}$), where $1.0$ represents strictly zero DC offset. Synchronization suitability is measured as clock transitions per bit ($T_{\text{clk}}$), quantifying timing information available to the receiver phase-locked loop.
 
-\begin{table}[!htbp]
+\begin{table}[H]
 \centering
 \caption{Line-Code Physical Characteristics}
 \label{tab:code_characteristics}
@@ -145,9 +145,9 @@ Diff. Manchester & $2$ ($\pm 1$) & $1.000$ & $\approx 2840$ & $\approx 1.48$ \\
 
 \section{System Architecture and Problem Formulation}
 
-\begin{figure}[!b]
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig1_architecture.png}
+\includegraphics[width=\columnwidth,height=4.0cm,keepaspectratio]{fig1_architecture.png}
 \caption{SignalForge Dual-Engine Architecture. Engine~1 (physical simulation, $80$--$200$~ms) establishes ground truth, while Engine~2 ($k$-NN classifier, $< 0.5$~ms) provides real-time line-code selection.}
 \label{fig:arch}
 \end{figure}
@@ -206,30 +206,28 @@ The implementation comprises: (1) a MATLAB simulation suite executing parametric
 \section{Results and Discussion}
 
 \subsection{The dashboard and waveforms}
+Fig.~\ref{fig:dashboard} demonstrates the live dashboard at the operating point of Section~VI. It recommends Manchester under the SAW head, reports measured BER of $0.0000$ on the test sequence, DC balance score of $0.990$, and $0.50$~ms inference latency.
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig2_dashboard.png}
+\includegraphics[width=\columnwidth,height=3.6cm,keepaspectratio]{fig2_dashboard.png}
 \caption{SignalForge live dashboard at SNR = 15~dB, $k = 0.25$, $v = 0.50$~m/s, $d = 350$~m. Recommended code: Manchester ($60\%$ confidence) with Differential Manchester ($40\%$).}
 \label{fig:dashboard}
 \end{figure}
 
-Fig.~\ref{fig:dashboard} demonstrates the live dashboard at the operating point of Section~VI. It recommends Manchester under the SAW head, reports measured BER of $0.0000$ on the test sequence, DC balance score of $0.990$, and $0.50$~ms inference latency.
+Fig.~\ref{fig:waveforms} overlays each transmitted waveform on its impaired received version. NRZ-L and NRZ-I use two full-width levels; RZ returns to zero within each $1$; Manchester and Differential Manchester switch at mid-bit; and AMI alternates $+1, 0, -1$. The received traces exhibit attenuation and multipath smoothing while remaining distinctly separated from decision thresholds at high SNR.
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig3_waveforms.png}
+\includegraphics[width=\columnwidth,height=3.6cm,keepaspectratio]{fig3_waveforms.png}
 \caption{Baseband waveforms of the six line codes over 12~ms (transmitted in color, impaired received signal in grey), using a 12-bit test stream.}
 \label{fig:waveforms}
 \end{figure}
 
-Fig.~\ref{fig:waveforms} overlays each transmitted waveform on its impaired received version. NRZ-L and NRZ-I use two full-width levels; RZ returns to zero within each $1$; Manchester and Differential Manchester switch at mid-bit; and AMI alternates $+1, 0, -1$. The received traces exhibit attenuation and multipath smoothing while remaining distinctly separated from decision thresholds at high SNR.
-
 \subsection{Spectral, DC and synchronization properties}
-
-\begin{figure}[!htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig4_properties.png}
+\includegraphics[width=\columnwidth,height=3.6cm,keepaspectratio]{fig4_properties.png}
 \caption{Physical-layer metrics: $90\%$ power bandwidth (left), DC balance score (center) and clock transitions per bit (right).}
 \label{fig:properties}
 \end{figure}
@@ -237,15 +235,16 @@ Fig.~\ref{fig:waveforms} overlays each transmitted waveform on its impaired rece
 Fig.~\ref{fig:properties} and Table~\ref{tab:code_characteristics} summarize the physical layer properties. Relative to NRZ-L ($\approx 910$~Hz), RZ requires about $2.0\times$ bandwidth ($\approx 1850$~Hz), AMI requires $1.15\times$ ($\approx 1045$~Hz), and Manchester/Differential Manchester require $3.1\times$ ($\approx 2820$~Hz and $2840$~Hz). DC balance is $0.000$ for unipolar RZ and strictly $1.000$ for AMI, Manchester, and Differential Manchester. Clock transitions per bit are lowest for NRZ-L/I ($0.5$), intermediate for AMI ($0.76$), $1.0$ for RZ, and highest for Manchester ($1.5$). This validates the fundamental trade-off: higher synchronization capability requires expanded spectral bandwidth.
 
 \subsection{BER versus SNR}
+Fig.~\ref{fig:waterfall} and Table~\ref{tab:ber_snr} illustrate noise-limited waterfall behavior. At $-5$~dB SNR, NRZ-L and Manchester achieve the lowest BER ($0.23$--$0.24$). By $10$~dB, NRZ-L, NRZ-I, Manchester, and Differential Manchester drop below $10^{-4}$. Due to ternary slicing, AMI requires $\approx 2.6$~dB more SNR ($12.3$~dB), while unipolar RZ requires $\approx 5.4$~dB additional SNR ($15.1$~dB).
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig5_ber_snr_validated.png}
+\includegraphics[width=\columnwidth,height=3.6cm,keepaspectratio]{fig5_ber_snr_validated.png}
 \caption{BER versus receiver SNR for the six candidate line codes under acoustic multipath and Doppler conditions.}
 \label{fig:waterfall}
 \end{figure}
 
-\begin{table}[!htbp]
+\begin{table}[H]
 \centering
 \caption{BER versus SNR Performance Across Candidate Codes}
 \label{tab:ber_snr}
@@ -263,38 +262,34 @@ Diff. Man. & $0.360$ & $0.043$ & $0.0045$ & $< 10^{-4}$ & $\approx 9.8$ dB \\
 \end{tabular}
 \end{table}
 
-Fig.~\ref{fig:waterfall} and Table~\ref{tab:ber_snr} illustrate noise-limited waterfall behavior. At $-5$~dB SNR, NRZ-L and Manchester achieve the lowest BER ($0.23$--$0.24$). By $10$~dB, NRZ-L, NRZ-I, Manchester, and Differential Manchester drop below $10^{-4}$. Due to ternary slicing, AMI requires $\approx 2.6$~dB more SNR ($12.3$~dB), while unipolar RZ requires $\approx 5.4$~dB additional SNR ($15.1$~dB).
+Fig.~\ref{fig:matlab_snr} illustrates simulation sweeps where Doppler carrier offset is left uncompensated. When carrier phase rotation exceeds detection threshold margins, error floors develop between $0.31$ and $0.50$ across all schemes, highlighting that Doppler synchronization is essential for physical decoding.
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig6_ber_snr_matlab.png}
+\includegraphics[width=\columnwidth,height=3.6cm,keepaspectratio]{fig6_ber_snr_matlab.png}
 \caption{Empirical BER vs. SNR from MATLAB simulation sweeps illustrating the impairment floor induced under uncompensated Doppler drift.}
 \label{fig:matlab_snr}
 \end{figure}
 
-Fig.~\ref{fig:matlab_snr} illustrates simulation sweeps where Doppler carrier offset is left uncompensated. When carrier phase rotation exceeds detection threshold margins, error floors develop between $0.31$ and $0.50$ across all schemes, highlighting that Doppler synchronization is essential for physical decoding.
-
 \subsection{BER versus Doppler}
+Fig.~\ref{fig:doppler} shows the effect of relative vehicle motion. At zero velocity, NRZ-L, NRZ-I, Manchester and Differential Manchester achieve error-free transmission ($\text{BER} \approx 0$). As velocity rises past $0.5$~m/s, accumulated phase drift over the frame degrades threshold slicing, with BER climbing toward chance ($0.45$--$0.50$) beyond $3$~m/s.
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig7_ber_doppler.png}
+\includegraphics[width=\columnwidth,height=3.6cm,keepaspectratio]{fig7_ber_doppler.png}
 \caption{BER versus relative platform velocity $v$ ($0$ to $10$~m/s) at $\text{SNR} = 15$~dB demonstrating severe impairment bounds under Doppler.}
 \label{fig:doppler}
 \end{figure}
 
-Fig.~\ref{fig:doppler} shows the effect of relative vehicle motion. At zero velocity, NRZ-L, NRZ-I, Manchester and Differential Manchester achieve error-free transmission ($\text{BER} \approx 0$). As velocity rises past $0.5$~m/s, accumulated phase drift over the frame degrades threshold slicing, with BER climbing toward chance ($0.45$--$0.50$) beyond $3$~m/s.
-
 \subsection{Adaptive selection and scenario comparison}
-
-\begin{figure}[!htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{fig8_adaptive_heatmap.png}
+\includegraphics[width=\columnwidth,height=3.6cm,keepaspectratio]{fig8_adaptive_heatmap.png}
 \caption{Adaptive decision score heatmap across five test scenarios (asterisk = selected code) and composite utility scores for Extreme Channel conditions.}
 \label{fig:adaptive_heatmap}
 \end{figure}
 
-\begin{table}[!htbp]
+\begin{table}[H]
 \centering
 \caption{Decision Scores by Scenario Across Candidate Line Codes}
 \label{tab:decision_scores}
