@@ -8,6 +8,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage{url}
 \usepackage{microtype}
 
@@ -21,29 +22,16 @@
 \title{A Real-Time Adaptive Digital Communication System for Intelligent Line-Code Selection Under Simulated Underwater Acoustic Channel Conditions}
 
 \author{
-    \IEEEauthorblockN{Ekanshi Yadav}
+    \IEEEauthorblockN{Ekanshi Yadav, Shailesh A, and Sheshadri Muthusamy}
     \IEEEauthorblockA{\textit{School of Electronics Engineering (SENSE)} \\
-    \textit{Vellore Institute of Technology}\\
-    Vellore, Tamil Nadu, India \\
-    ekanshi.yadav2024@vitstudent.ac.in}
-    \and
-    \IEEEauthorblockN{Shailesh A}
-    \IEEEauthorblockA{\textit{School of Electronics Engineering (SENSE)} \\
-    \textit{Vellore Institute of Technology}\\
-    Vellore, Tamil Nadu, India \\
-    shailesh.2024@vitstudent.ac.in}
-    \and
-    \IEEEauthorblockN{Sheshadri Muthusamy}
-    \IEEEauthorblockA{\textit{School of Electronics Engineering (SENSE)} \\
-    \textit{Vellore Institute of Technology}\\
-    Vellore, Tamil Nadu, India \\
-    sheshadri.m2024@vitstudent.ac.in}
+    \textit{Vellore Institute of Technology}, Vellore, Tamil Nadu, India \\
+    Email: \{ekanshi.yadav2024, shailesh.2024, sheshadri.m2024\}@vitstudent.ac.in}
 }
 
 \maketitle
 
 \begin{abstract}
-Underwater acoustic channels present severe transmission impairments, including severe frequency-dependent Thorp absorption, three-path surface/bottom multipath reflections, and carrier Doppler shifts caused by relative vehicle motion. Consequently, relying on a single static line code cannot satisfy diverse operational demands. In this work, we propose and implement \textbf{SignalForge}, an intelligent hybrid communication framework that evaluates six baseband line codes: Non-Return-to-Zero Level (NRZ-L), Non-Return-to-Zero Inverted (NRZ-I), Return-to-Zero (RZ), Manchester, Alternate Mark Inversion (AMI), and Differential Manchester. To solve the computational latency problem of brute-force physical simulation ($80$--$200$~ms per evaluation), we introduce a Dual-Engine architecture: an offline high-fidelity acoustic channel simulator that establishes physical ground truth, paired with a lightweight, edge-deployable $9$-dimensional $k$-nearest-neighbor ($k$-NN, $k=5$) classifier that predicts the optimal line code in under $0.5$~ms ($\approx 360\times$ acceleration). The model supports both a multi-attribute Simple Additive Weighting (SAW) utility function and a minimum-Bit Error Rate (BER) oracle. Experimental sweeps validate that while NRZ-L and AMI minimize bandwidth occupancy ($910$~Hz and $1045$~Hz), Manchester and Differential Manchester ensure continuous clock synchronization ($1.5$ transitions/bit) and robust bit recovery under low SNR and multipath. The system is deployed via a standalone, zero-dependency web dashboard with automated MATLAB script generation for complete scientific reproducibility.
+Underwater acoustic channels present severe transmission impairments, including frequency-dependent Thorp absorption, three-path surface/bottom multipath reflections, and carrier Doppler shifts caused by relative vehicle motion. Consequently, relying on a single static line code cannot satisfy diverse operational demands. In this work, we propose and implement \textbf{SignalForge}, an intelligent hybrid communication framework that evaluates six baseband line codes: Non-Return-to-Zero Level (NRZ-L), Non-Return-to-Zero Inverted (NRZ-I), Return-to-Zero (RZ), Manchester, Alternate Mark Inversion (AMI), and Differential Manchester. To solve the computational latency problem of brute-force physical simulation ($80$--$200$~ms per evaluation), we introduce a Dual-Engine architecture: an offline high-fidelity acoustic channel simulator that establishes physical ground truth, paired with a lightweight, edge-deployable $9$-dimensional $k$-nearest-neighbor ($k$-NN, $k=5$) classifier that predicts the optimal line code in under $0.5$~ms ($\approx 360\times$ acceleration). The model supports both a multi-attribute Simple Additive Weighting (SAW) utility function and a minimum-Bit Error Rate (BER) oracle. Experimental sweeps validate that while NRZ-L and AMI minimize bandwidth occupancy ($910$~Hz and $1045$~Hz), Manchester and Differential Manchester ensure continuous clock synchronization ($1.5$ transitions/bit) and robust bit recovery under low SNR and multipath. The system is deployed via a standalone, zero-dependency web dashboard with automated MATLAB script generation for complete scientific reproducibility.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -74,11 +62,11 @@ This project accomplishes five engineering objectives:
 \section{Related Work and Literature Review}
 Adaptive communication in underwater acoustics has predominantly focused on carrier-level Adaptive Modulation and Coding (AMC). Table~\ref{tab:lit_review} provides a comparative summary of relevant contemporary studies.
 
-\begin{table*}[t]
+\begin{table*}[!t]
 \centering
 \caption{Comparative Summary of Related Underwater Acoustic Communication Works}
 \label{tab:lit_review}
-\begin{tabularx}{\textwidth}{@{}l c l X X@{}}
+\begin{tabularx}{\textwidth}{@{}l c p{3.2cm} X X@{}}
 \toprule
 \textbf{Reference} & \textbf{Year} & \textbf{Primary Approach} & \textbf{Key Capabilities} & \textbf{Relevance / Distinction to SignalForge} \\
 \midrule
@@ -89,6 +77,7 @@ Zhang \textit{et al.}~\cite{survey2026amc} & 2026 & Comprehensive Survey \& Benc
 Kim \textit{et al.}~\cite{adaptive2023profile} & 2023 & Deep Reinforcement Learning & Modem communication profile switching in varying ocean environments & Operates on discrete vendor modem presets rather than fundamental pulse representations. \\
 Fan \& Wang~\cite{fan2021adaptive} & 2021 & DDPG with Gumbel-Softmax & Multimodal switching between FSK, single-carrier, and multicarrier blocks & Optimizes energy vs. spectral efficiency; does not optimize timing or DC balance. \\
 Kadali \textit{et al.}~\cite{kadali2025ai} & 2025 & Decision Trees \& Random Forests & Cognitive modulation adaptation from environmental ocean telemetry & Uses environmental inputs ($T$, $S$, depth); validates feature-based edge decision making. \\
+\midrule
 \textbf{This Work (SignalForge)} & \textbf{2026} & \textbf{Hybrid Dual-Engine + 9-D $k$-NN} & \textbf{Real-time adaptation across 6 baseband line codes with SAW / Oracle objectives ($< 0.5$~ms)} & \textbf{First unified multi-criteria line-code selector optimizing BER, bandwidth, DC offset, and clock sync.} \\
 \bottomrule
 \end{tabularx}
@@ -136,7 +125,7 @@ Performance is quantified via four metrics:
 
 Table~\ref{tab:code_characteristics} summarizes the measured baseline characteristics for each scheme.
 
-\begin{table}[h]
+\begin{table}[!htbp]
 \centering
 \caption{Baseline Physical Characteristics Across Candidate Line Codes}
 \label{tab:code_characteristics}
@@ -156,10 +145,10 @@ Diff. Manchester & $2$ ($\pm 1$) & $1.000$ & $2840$ & $1.48$ \\
 
 \section{System Architecture and Problem Formulation}
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=0.95\textwidth]{fig1_architecture.png}
-\caption{High-definition SignalForge Dual-Engine Architecture. Engine~1 performs physical acoustic waveform simulation ($80$--$200$~ms) to establish ground truth. Engine~2 utilizes a standardized $9$-D $k$-NN classifier ($< 0.5$~ms) for real-time edge adaptation, feeding an interactive verification dashboard.}
+\includegraphics[width=0.92\textwidth]{fig1_architecture.png}
+\caption{SignalForge Dual-Engine Architecture. Engine~1 performs physical acoustic waveform simulation ($80$--$200$~ms) to establish ground truth. Engine~2 utilizes a standardized $9$-D $k$-NN classifier ($< 0.5$~ms) for real-time edge adaptation, feeding an interactive verification dashboard.}
 \label{fig:arch}
 \end{figure*}
 
@@ -238,31 +227,33 @@ Under the SAW head, utility balances four normalized criteria:
 \end{equation}
 The nominal balanced weights are set to $\mathbf{w} = [0.35, 0.25, 0.20, 0.20]^T$, dynamically adjusted based on the active priority mode (e.g., $w_3 = 0.60$ in DC-Free mode).
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig2_dashboard.png}
-\caption{SignalForge interactive standalone web dashboard running in a standard browser. Live telemetry sliders update edge ML inference ($0.50$~ms), 6-class posterior distribution bars, live waveform canvas, and self-contained MATLAB script generation.}
-\label{fig:dashboard}
-\end{figure}
-
 \section{Simulation Methodology and Implementation}
 The implementation comprises three components:
 \begin{enumerate}
     \item \textbf{MATLAB Simulation Suite:} Generates full physical sweeps over SNR ($-5$ to $29$~dB), multipath severity ($k = 0$ to $1$), and Doppler velocity ($0$ to $10$~m/s).
     \item \textbf{Dataset Synthesis:} A balanced training matrix of $N=120$ channel scenarios and an independent test set of $60$ scenarios were generated with a fixed random seed ($42$) for reproducibility.
-    \item \textbf{Edge Web Dashboard:} A zero-dependency JavaScript engine ([dashboard/app.js](file:///c:/Users/shail/OneDrive/Desktop/Docs/FALL%20SEMESTER%2026-27/dcs/project/dashboard/app.js) and [dashboard/ml_model_data.js](file:///c:/Users/shail/OneDrive/Desktop/Docs/FALL%20SEMESTER%2026-27/dcs/project/dashboard/ml_model_data.js)) embeds the $120 \times 9$ normalized training matrix and executes full $k$-NN classification in client-side memory.
+    \item \textbf{Edge Web Dashboard:} A zero-dependency JavaScript implementation (\texttt{app.js} and \texttt{ml\_model\_data.js}) embeds the $120 \times 9$ normalized training matrix and executes full $k$-NN classification in client-side memory.
 \end{enumerate}
 
 \section{Results and Discussion}
 
-\begin{figure}[t]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=\columnwidth]{fig3_waveforms.png}
-\caption{Transmitted digital line-code pulses (colored) vs. impaired received acoustic waveforms (grey) across the six candidate schemes over a $12$~ms transmission interval.}
-\label{fig:waveforms}
-\end{figure}
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{fig2_dashboard.png}
+  \caption{SignalForge interactive standalone web dashboard running in a standard browser. Live telemetry sliders update edge ML inference ($0.50$~ms), posterior distribution bars, and self-contained MATLAB script generation.}
+  \label{fig:dashboard}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{fig3_waveforms.png}
+  \caption{Transmitted digital line-code pulses (colored) vs. impaired received acoustic waveforms (grey) across the six candidate schemes over a $12$~ms transmission interval.}
+  \label{fig:waveforms}
+\end{minipage}
+\end{figure*}
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=0.92\textwidth]{fig4_properties.png}
 \caption{Physical layer comparison across candidate schemes: $90\%$ power bandwidth in Hz (left), DC balance score $M_{\text{DC}} \in [0, 1]$ (center), and clock transition density in edges/bit (right).}
@@ -284,14 +275,14 @@ Fig.~\ref{fig:properties} illustrates the physical trade-offs measured across th
 
 \subsection{BER vs. SNR Waterfall Performance}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\columnwidth]{fig5_ber_snr_validated.png}
+\includegraphics[width=0.95\columnwidth]{fig5_ber_snr_validated.png}
 \caption{Bit Error Rate (BER) waterfall curves versus receiver SNR ($-5$ to $25$~dB) across the six line codes under acoustic multipath and Doppler conditions.}
 \label{fig:waterfall}
 \end{figure}
 
-\begin{table}[h]
+\begin{table}[!htbp]
 \centering
 \caption{Measured BER vs. SNR Performance Across Candidate Codes}
 \label{tab:ber_snr}
@@ -311,33 +302,35 @@ Diff. Man. & $0.360$ & $0.043$ & $0.0045$ & $< 10^{-4}$ & $\approx 9.8$ dB \\
 
 Fig.~\ref{fig:waterfall} and Table~\ref{tab:ber_snr} present BER waterfall curves. Manchester and NRZ-L exhibit lowest error rates at low SNR, reaching the $10^{-4}$ BER threshold at $9.5$~dB and $9.7$~dB, respectively. Due to three-level threshold slicing, AMI requires approximately $2.6$~dB additional SNR ($12.3$~dB threshold), while unipolar RZ incurs a $5.4$~dB penalty ($15.1$~dB threshold).
 
-\begin{figure}[t]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=0.88\columnwidth]{fig6_ber_snr_matlab.png}
-\caption{Empirical BER vs. SNR from MATLAB simulation sweeps illustrating the error floor induced under uncompensated multipath and Doppler drift.}
-\label{fig:matlab_snr}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.88\columnwidth]{fig7_ber_doppler.png}
-\caption{BER vs. relative vehicle velocity $v$ ($0$ to $10$~m/s) at $\text{SNR}=15$~dB demonstrating severe impairment bounds under uncompensated Doppler.}
-\label{fig:doppler}
-\end{figure}
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=0.92\textwidth]{fig6_ber_snr_matlab.png}
+  \caption{Empirical BER vs. SNR from MATLAB simulation sweeps illustrating the error floor induced under uncompensated multipath and Doppler drift.}
+  \label{fig:matlab_snr}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \includegraphics[width=0.92\textwidth]{fig7_ber_doppler.png}
+  \caption{BER vs. relative vehicle velocity $v$ ($0$ to $10$~m/s) at $\text{SNR}=15$~dB demonstrating severe impairment bounds under uncompensated Doppler.}
+  \label{fig:doppler}
+\end{minipage}
+\end{figure*}
 
 \subsection{Doppler Sensitivity Analysis}
 Figs.~\ref{fig:matlab_snr} and~\ref{fig:doppler} analyze acoustic channel impairment limits. Fig.~\ref{fig:doppler} demonstrates that platform motion produces pronounced phase rotation: above $1.0$~m/s ($13.3$~Hz carrier shift), uncompensated threshold detection degrades across all schemes, reaching error floors near chance ($\text{BER} \approx 0.45$--$0.50$) beyond $3.0$~m/s. This proves that real-time Doppler tracking is mandatory for high-velocity autonomous underwater vehicle (AUV) links.
 
 \subsection{Adaptive Decision Engine Evaluation}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=\columnwidth]{fig8_adaptive_heatmap.png}
+\includegraphics[width=0.95\columnwidth]{fig8_adaptive_heatmap.png}
 \caption{Adaptive decision score heatmap across five test scenarios (asterisk indicates selected code) and composite utility scores for Extreme Channel conditions.}
 \label{fig:adaptive_heatmap}
 \end{figure}
 
-\begin{table}[h]
+\begin{table}[!htbp]
 \centering
 \caption{Scenario-Based SAW Decision Utility Scores}
 \label{tab:decision_scores}
