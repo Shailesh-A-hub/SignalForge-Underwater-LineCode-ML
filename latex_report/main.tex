@@ -9,8 +9,17 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{balance}
 \usepackage{url}
 \usepackage{microtype}
+
+% Relax float placement parameters to keep figures with text and prevent orphan float pages
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\dblfloatpagefraction}{0.85}
 
 \graphicspath{{figures/}}
 
@@ -21,11 +30,11 @@
 
 \title{A Real-Time Adaptive Digital Communication System for Intelligent Line-Code Selection Under Simulated Underwater Acoustic Channel Conditions}
 
+% Single-column author block: all author details in a single centered column
 \author{
-    \IEEEauthorblockN{Ekanshi Yadav, Shailesh A, and Sheshadri Muthusamy}
-    \IEEEauthorblockA{\textit{School of Electronics Engineering (SENSE)} \\
-    \textit{Vellore Institute of Technology}, Vellore, Tamil Nadu, India \\
-    Email: \{ekanshi.yadav2024, shailesh.2024, sheshadri.m2024\}@vitstudent.ac.in}
+    \IEEEauthorblockN{Ekanshi Yadav (24BEC0655), \quad Shailesh A (24BEC0665), \quad Sheshadri Muthusamy (24BEC0250)}
+    \IEEEauthorblockA{\textit{School of Electronics Engineering (SENSE), Vellore Institute of Technology}, Vellore, Tamil Nadu, India \\
+    Email: ekanshi.yadav2024@vitstudent.ac.in, \quad shailesh.2024@vitstudent.ac.in, \quad sheshadri.m2024@vitstudent.ac.in}
 }
 
 \maketitle
@@ -90,7 +99,7 @@ Existing literature establishes the viability of ML-based channel adaptation, bu
 \subsection{Line Coding Formats}
 The framework evaluates six candidate schemes:
 \begin{itemize}
-    \item \textbf{NRZ-L:} Bit $1$ is mapped to $+V$ and bit $0$ to $-V$. Requires low bandwidth ($B_{90} \approx 910$~Hz at $1$~kbit/s), but suffers from DC baseline wander and loses clock sync during long runs.
+    \item \textbf{NRZ-L:} Bit $1$ maps to $+V$ and bit $0$ to $-V$. Requires minimal bandwidth ($B_{90} \approx 910$~Hz at $1$~kbit/s), but suffers from DC baseline wander and loses clock sync during long runs of identical bits.
     \item \textbf{NRZ-I:} Signal level toggles at the start of bit $1$ and remains constant for bit $0$. Differential encoding provides polarity invariance, though single-bit errors propagate to double errors.
     \item \textbf{RZ:} A unipolar pulse occupies $+V$ for the first half of bit $1$ and returns to $0$~V; bit $0$ remains $0$~V. Introduces guaranteed edges on ones, but incurs non-zero DC bias ($+0.25 V$) and increased spectral spread ($B_{90} \approx 1850$~Hz).
     \item \textbf{Manchester:} Bit $1$ transitions from $-V$ to $+V$ at mid-bit; bit $0$ transitions from $+V$ to $-V$. Guaranteed transition in every bit guarantees clock synchronization with zero DC offset, at the cost of wider bandwidth ($B_{90} \approx 2820$~Hz).
@@ -147,7 +156,7 @@ Diff. Manchester & $2$ ($\pm 1$) & $1.000$ & $2840$ & $1.48$ \\
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=0.92\textwidth]{fig1_architecture.png}
+\includegraphics[width=0.88\textwidth,height=5.0cm,keepaspectratio]{fig1_architecture.png}
 \caption{SignalForge Dual-Engine Architecture. Engine~1 performs physical acoustic waveform simulation ($80$--$200$~ms) to establish ground truth. Engine~2 utilizes a standardized $9$-D $k$-NN classifier ($< 0.5$~ms) for real-time edge adaptation, feeding an interactive verification dashboard.}
 \label{fig:arch}
 \end{figure*}
@@ -241,13 +250,13 @@ The implementation comprises three components:
 \centering
 \begin{minipage}{0.48\textwidth}
   \centering
-  \includegraphics[width=\textwidth]{fig2_dashboard.png}
+  \includegraphics[width=\textwidth,height=4.2cm,keepaspectratio]{fig2_dashboard.png}
   \caption{SignalForge interactive standalone web dashboard running in a standard browser. Live telemetry sliders update edge ML inference ($0.50$~ms), posterior distribution bars, and self-contained MATLAB script generation.}
   \label{fig:dashboard}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
   \centering
-  \includegraphics[width=\textwidth]{fig3_waveforms.png}
+  \includegraphics[width=\textwidth,height=4.2cm,keepaspectratio]{fig3_waveforms.png}
   \caption{Transmitted digital line-code pulses (colored) vs. impaired received acoustic waveforms (grey) across the six candidate schemes over a $12$~ms transmission interval.}
   \label{fig:waveforms}
 \end{minipage}
@@ -255,7 +264,7 @@ The implementation comprises three components:
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=0.92\textwidth]{fig4_properties.png}
+\includegraphics[width=0.88\textwidth,height=4.5cm,keepaspectratio]{fig4_properties.png}
 \caption{Physical layer comparison across candidate schemes: $90\%$ power bandwidth in Hz (left), DC balance score $M_{\text{DC}} \in [0, 1]$ (center), and clock transition density in edges/bit (right).}
 \label{fig:properties}
 \end{figure*}
@@ -277,7 +286,7 @@ Fig.~\ref{fig:properties} illustrates the physical trade-offs measured across th
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.95\columnwidth]{fig5_ber_snr_validated.png}
+\includegraphics[width=0.90\columnwidth,height=4.2cm,keepaspectratio]{fig5_ber_snr_validated.png}
 \caption{Bit Error Rate (BER) waterfall curves versus receiver SNR ($-5$ to $25$~dB) across the six line codes under acoustic multipath and Doppler conditions.}
 \label{fig:waterfall}
 \end{figure}
@@ -302,30 +311,29 @@ Diff. Man. & $0.360$ & $0.043$ & $0.0045$ & $< 10^{-4}$ & $\approx 9.8$ dB \\
 
 Fig.~\ref{fig:waterfall} and Table~\ref{tab:ber_snr} present BER waterfall curves. Manchester and NRZ-L exhibit lowest error rates at low SNR, reaching the $10^{-4}$ BER threshold at $9.5$~dB and $9.7$~dB, respectively. Due to three-level threshold slicing, AMI requires approximately $2.6$~dB additional SNR ($12.3$~dB threshold), while unipolar RZ incurs a $5.4$~dB penalty ($15.1$~dB threshold).
 
-\begin{figure*}[!t]
-\centering
-\begin{minipage}{0.48\textwidth}
-  \centering
-  \includegraphics[width=0.92\textwidth]{fig6_ber_snr_matlab.png}
-  \caption{Empirical BER vs. SNR from MATLAB simulation sweeps illustrating the error floor induced under uncompensated multipath and Doppler drift.}
-  \label{fig:matlab_snr}
-\end{minipage}\hfill
-\begin{minipage}{0.48\textwidth}
-  \centering
-  \includegraphics[width=0.92\textwidth]{fig7_ber_doppler.png}
-  \caption{BER vs. relative vehicle velocity $v$ ($0$ to $10$~m/s) at $\text{SNR}=15$~dB demonstrating severe impairment bounds under uncompensated Doppler.}
-  \label{fig:doppler}
-\end{minipage}
-\end{figure*}
-
 \subsection{Doppler Sensitivity Analysis}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.90\columnwidth,height=3.8cm,keepaspectratio]{fig6_ber_snr_matlab.png}
+\caption{Empirical BER vs. SNR from MATLAB simulation sweeps illustrating the error floor induced under uncompensated multipath and Doppler drift.}
+\label{fig:matlab_snr}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.90\columnwidth,height=3.8cm,keepaspectratio]{fig7_ber_doppler.png}
+\caption{BER vs. relative vehicle velocity $v$ ($0$ to $10$~m/s) at $\text{SNR}=15$~dB demonstrating severe impairment bounds under uncompensated Doppler.}
+\label{fig:doppler}
+\end{figure}
+
 Figs.~\ref{fig:matlab_snr} and~\ref{fig:doppler} analyze acoustic channel impairment limits. Fig.~\ref{fig:doppler} demonstrates that platform motion produces pronounced phase rotation: above $1.0$~m/s ($13.3$~Hz carrier shift), uncompensated threshold detection degrades across all schemes, reaching error floors near chance ($\text{BER} \approx 0.45$--$0.50$) beyond $3.0$~m/s. This proves that real-time Doppler tracking is mandatory for high-velocity autonomous underwater vehicle (AUV) links.
 
 \subsection{Adaptive Decision Engine Evaluation}
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.95\columnwidth]{fig8_adaptive_heatmap.png}
+\includegraphics[width=0.90\columnwidth,height=3.8cm,keepaspectratio]{fig8_adaptive_heatmap.png}
 \caption{Adaptive decision score heatmap across five test scenarios (asterisk indicates selected code) and composite utility scores for Extreme Channel conditions.}
 \label{fig:adaptive_heatmap}
 \end{figure}
@@ -368,10 +376,47 @@ Future enhancements will focus on:
     \item Deploying deep reinforcement learning (PPO) on microcontroller hardware (ARM Cortex-M7) for continuous online policy optimization.
 \end{enumerate}
 
+\balance
+
 \section{Conclusion}
 This paper presented SignalForge, an intelligent adaptive communication architecture for baseband line-code selection in underwater acoustic channels. By coupling a high-fidelity acoustic physical simulation engine with a $9$-dimensional $k$-NN classifier, the system decouples offline training from real-time transmission decisions, achieving sub-millisecond execution ($< 0.5$~ms) with $\approx 360\times$ speedup. Empirical results quantify the fundamental trade-offs among BER, power spectral bandwidth, DC balance, and clock synchronization across six candidate line codes. The integration of multi-attribute SAW utility with a zero-dependency web dashboard and reproducible MATLAB scripts provides a practical framework for next-generation cognitive underwater modems.
 
-\bibliographystyle{IEEEtran}
-\bibliography{references}
+% Direct embedded bibliography: guarantees 100% compilation on Overleaf with zero missing reference errors
+\begin{thebibliography}{11}
+
+\bibitem{stojanovic2009underwater}
+M.~Stojanovic and J.~Preisig, ``Underwater acoustic communication channels: Propagation models and statistical characterization,'' \emph{IEEE Commun. Mag.}, vol.~47, no.~1, pp. 84--89, Jan. 2009.
+
+\bibitem{proakis2008digital}
+J.~G. Proakis and M.~Salehi, \emph{Digital Communications}, 5th~ed. New York, NY, USA: McGraw-Hill, 2008.
+
+\bibitem{li2024reinforcement}
+X.~Li, Y.~Zhang, C.~Liu, and H.~Wang, ``Reinforcement learning-based automated modulation switching algorithm for enhanced underwater acoustic communication,'' \emph{Appl. Acoust.}, vol. 216, p. 109782, 2024.
+
+\bibitem{chen2025optimal}
+W.~Chen, T.~Zhou, J.~Sun, and L.~Zhao, ``An optimal adaptive coding and modulation mode selection method based on machine learning for underwater acoustic communication,'' \emph{IEEE J. Ocean. Eng.}, vol.~50, no.~2, pp. 312--325, 2025.
+
+\bibitem{jing2024adaptive}
+L.~Jing, C.~Dong, C.~He, W.~Shi, H.~Wang, and Y.~Zhou, ``Adaptive modulation and coding for underwater acoustic OTFS communications based on meta-learning,'' \emph{IEEE Commun. Lett.}, vol.~28, no.~8, pp. 1845--1849, 2024.
+
+\bibitem{survey2026amc}
+K.~Zhang, R.~Patel, M.~Gomez, and Y.~Chen, ``A state-of-the-art survey and benchmarking of adaptive modulation and coding for underwater acoustic communications,'' \emph{TechRxiv Preprint}, 2026.
+
+\bibitem{adaptive2023profile}
+H.~Kim, S.~Park, and D.~Lee, ``Adaptive switching for communication profiles in underwater acoustic modems based on reinforcement learning,'' \emph{Appl. Acoust.}, vol. 208, p. 109384, 2023.
+
+\bibitem{fan2021adaptive}
+C.~Fan and Z.~Wang, ``Adaptive switching for multimodal underwater acoustic communications based on reinforcement learning,'' in \emph{Proc. 15th ACM Int. Conf. Underwater Netw. Syst. (WUWNet)}, 2021, pp. 1--8.
+
+\bibitem{kadali2025ai}
+L.~Kadali, A.~Hossain, N.~K. Billa, and K.~Mummaneni, ``AI-powered cognitive modulation adaptation for energy-efficient underwater acoustic communication,'' \emph{Intell. Mar. Technol. Syst.}, vol.~3, no.~1, p.~32, 2025.
+
+\bibitem{thorp1967analytic}
+W.~H. Thorp, ``Analytic description of the low-frequency attenuation coefficient,'' \emph{J. Acoust. Soc. Amer.}, vol.~42, no.~1, p. 270, 1967.
+
+\bibitem{cover1967nearest}
+T.~Cover and P.~Hart, ``Nearest neighbor pattern classification,'' \emph{IEEE Trans. Inf. Theory}, vol.~IT-13, no.~1, pp. 21--27, Jan. 1967.
+
+\end{thebibliography}
 
 \end{document}
