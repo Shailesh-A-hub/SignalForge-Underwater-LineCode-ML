@@ -28,27 +28,28 @@
 
 \title{A Real-Time Adaptive Digital Communication System for Intelligent Line-Code Selection Under Simulated Underwater Acoustic Channel Conditions}
 
-% Single column stacked author block matching exact required format
+% 3-column author block matching reference screenshot
 \author{
-    \IEEEauthorblockN{EKANSHI YADAV}
-    \IEEEauthorblockA{\textit{Dept. of Electronics and communication Engineering} \\
+    \IEEEauthorblockN{Sayandeep Kundu}
+    \IEEEauthorblockA{\textit{Dept. of Electronics and} \\
+    \textit{Communication Engineering} \\
     \textit{Vellore Institute of Technology} \\
     Vellore, India \\
-    \underline{\textcolor{blue}{\url{ekanshi.yadav2024@vitstudent.ac.in}}}}
-    \vspace{0.25cm}
-    
-    \IEEEauthorblockN{A SHAILESH}
-    \IEEEauthorblockA{\textit{Dept. of Electronics and communication Engineering} \\
+    sayandeep.kundu2024@vitstudent.ac.in}
+    \and
+    \IEEEauthorblockN{Sanjay K}
+    \IEEEauthorblockA{\textit{Dept. of Electronics and} \\
+    \textit{Communication Engineering} \\
     \textit{Vellore Institute of Technology} \\
     Vellore, India \\
-    \underline{\textcolor{blue}{\url{shailesh.2024@vitstudent.ac.in}}}}
-    \vspace{0.25cm}
-    
-    \IEEEauthorblockN{SHESHADRI MUTHUSAMY}
-    \IEEEauthorblockA{\textit{Dept. of Electronics and communication Engineering} \\
+    sanjay.k2024d@vitstudent.ac.in}
+    \and
+    \IEEEauthorblockN{A Shailesh}
+    \IEEEauthorblockA{\textit{Dept. of Electronics and} \\
+    \textit{Communication Engineering} \\
     \textit{Vellore Institute of Technology} \\
     Vellore, India \\
-    \underline{\textcolor{blue}{\url{sheshadri.m2024@vitstudent.ac.in}}}}
+    shailesh.2024@vitstudent.ac.in}
 }
 
 \maketitle
@@ -129,6 +130,7 @@ where $S(f)$ is the power spectral density. The DC balance score $M_{\text{DC}} 
 \centering
 \caption{Line-Code Physical Characteristics}
 \label{tab:code_characteristics}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}l c c c c@{}}
 \toprule
 \textbf{Code} & \textbf{Levels} & \textbf{DC Balance} & \textbf{$B_{90}$ (Hz)} & \textbf{Trans./Bit} \\
@@ -140,7 +142,8 @@ Manchester & $2$ ($\pm 1$) & $1.000$ & $\approx 2820$ & $\approx 1.50$ \\
 AMI & $3$ ($0, \pm 1$) & $1.000$ & $\approx 1045$ & $\approx 0.76$ \\
 Diff. Manchester & $2$ ($\pm 1$) & $1.000$ & $\approx 2840$ & $\approx 1.48$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \section{System Architecture and Problem Formulation}
@@ -248,6 +251,7 @@ Fig.~\ref{fig:waterfall} and Table~\ref{tab:ber_snr} illustrate noise-limited wa
 \centering
 \caption{BER versus SNR Performance Across Candidate Codes}
 \label{tab:ber_snr}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}l c c c c c@{}}
 \toprule
 \textbf{Code} & \textbf{$-5$ dB} & \textbf{$4$ dB} & \textbf{$7$ dB} & \textbf{$10$ dB} & \textbf{Threshold ($10^{-4}$)} \\
@@ -259,7 +263,8 @@ Manchester & $0.240$ & $0.022$ & $0.0023$ & $< 10^{-4}$ & $\approx 9.5$ dB \\
 AMI & $0.450$ & $0.107$ & $0.0290$ & $0.0027$ & $\approx 12.3$ dB \\
 Diff. Man. & $0.360$ & $0.043$ & $0.0045$ & $< 10^{-4}$ & $\approx 9.8$ dB \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 Fig.~\ref{fig:matlab_snr} illustrates simulation sweeps where Doppler carrier offset is left uncompensated. When carrier phase rotation exceeds detection threshold margins, error floors develop between $0.31$ and $0.50$ across all schemes, highlighting that Doppler synchronization is essential for physical decoding.
@@ -293,6 +298,7 @@ Fig.~\ref{fig:doppler} shows the effect of relative vehicle motion. At zero velo
 \centering
 \caption{Decision Scores by Scenario Across Candidate Line Codes}
 \label{tab:decision_scores}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}l c c c c c c@{}}
 \toprule
 \textbf{Scenario} & \textbf{NRZ-L} & \textbf{NRZ-I} & \textbf{RZ} & \textbf{Manch.} & \textbf{AMI} & \textbf{Diff. Man.} \\
@@ -305,7 +311,8 @@ Extreme Channel & $0.54$ & $0.70$ & $0.42$ & $0.54$ & $0.60$ & $\mathbf{0.76^*}$
 \midrule
 \textbf{Mean Utility} & $0.54$ & $0.73$ & $0.29$ & $0.69$ & $0.47$ & $\mathbf{0.81}$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 Fig.~\ref{fig:adaptive_heatmap} and Table~\ref{tab:decision_scores} evaluate adaptive selection across five standardized scenarios. Differential Manchester achieves top utility in Good ($0.95$), Noisy + Multipath ($0.72$), Severe ($0.80$), and Extreme ($0.76$) scenarios due to its combined DC balance, polarity invariance, and continuous mid-bit clock transitions. Manchester is chosen under Moderate Noise ($0.85$). 
